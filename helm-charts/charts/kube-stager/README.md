@@ -1,1 +1,1 @@
-# Kube-Stager Helm Chart
+# Kube-Stager Operator Helm Chart

@@ -1,7 +1,7 @@
 apiVersion: v1
 name: kube-stager
-version: 0.0.1
-appVersion: 0.0.1
+version: 0.1.0
+appVersion: 0.1.0
 kubeVersion: ">=1.19.0"
 description: "Kubernetes staging/test site operator"
 home: https://github.com/szeber/kube-stager
