@@ -3,6 +3,21 @@ entries:
   kube-stager:
   - apiVersion: v1
     appVersion: 0.1.0
+    created: "2023-04-30T09:55:27.690544119Z"
+    description: Kubernetes staging/test site operator
+    digest: 9b890beb3884edb9dbe6521e38bd57a1983e37a02d26cc574c4ae053c835cd50
+    home: https://github.com/szeber/kube-stager
+    kubeVersion: '>= 1.19.0'
+    maintainers:
+    - name: Zsolt Szeberenyi
+    name: kube-stager
+    sources:
+    - https://github.com/szeber/kube-stager
+    urls:
+    - https://github.com/szeber/kube-stager-helm/releases/download/kube-stager-0.1.1/kube-stager-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v1
+    appVersion: 0.1.0
     created: "2023-04-30T09:02:10.174847632Z"
     description: Kubernetes staging/test site operator
     digest: 1346dad47393b9ce4793ef4724e00ba48bee3c93d446e93752184c10132e3621
@@ -19,6 +34,22 @@ entries:
   prometheus-static-target:
   - apiVersion: v1
     appVersion: 0.1.0
+    created: "2023-04-30T09:55:27.805924724Z"
+    description: Prometheus static target operator to extend the functionality of
+      Prometheus Operator
+    digest: f3865b31ed5ddb9dbe30c04e10d0715bb024753c98d356d46edd1e37881550a5
+    home: https://github.com/szeber/kube-stager-prometheus-static-target
+    kubeVersion: '>= 1.19.0'
+    maintainers:
+    - name: Zsolt Szeberenyi
+    name: prometheus-static-target
+    sources:
+    - https://github.com/szeber/kube-stager-prometheus-static-target
+    urls:
+    - https://github.com/szeber/kube-stager-helm/releases/download/prometheus-static-target-0.1.1/prometheus-static-target-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v1
+    appVersion: 0.1.0
     created: "2023-04-30T09:02:10.319151763Z"
     description: Prometheus static target operator to extend the functionality of
       Prometheus Operator
@@ -33,4 +64,4 @@ entries:
     urls:
     - https://github.com/szeber/kube-stager-helm/releases/download/prometheus-static-target-0.1.0/prometheus-static-target-0.1.0.tgz
     version: 0.1.0
-generated: "2023-04-30T09:02:10.319157364Z"
+generated: "2023-04-30T09:55:27.805948125Z"
