@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-manager-config
+  namespace: {{ .Release.Namespace }}
+data:
+  controller_manager_config.yaml: |-
+    apiVersion: controller-config.operator.kube-stager.io/v1
+    kind: ProjectConfig
+{{ toYaml .Values.config | indent 4 }}

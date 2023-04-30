@@ -1,0 +1,55 @@
+image: ghcr.io/szeber/kube-stager
+imageTag: v0.1.0
+service:
+  labels: {}
+  annotations: {}
+deployment:
+  labels: {}
+  annotations: {}
+  replicas: 1
+  podLabels: {}
+  podAnnotations: {}
+  resources:
+    limits:
+      cpu: 500m
+      memory: 128Mi
+    requests:
+      cpu: 10m
+      memory: 64Mi
+  rbacProxy:
+    resources:
+      limits:
+        cpu: 500m
+        memory: 128Mi
+      requests:
+        cpu: 5m
+        memory: 64Mi
+rbac:
+  create: true
+  serviceAccount:
+    name: kube-stager-controller-manager
+    labels: {}
+    annotations: {}
+config:
+  health:
+    healthProbeBindAddress: :8081
+  metrics:
+    bindAddress: 127.0.0.1:8080
+  webhook:
+    port: 9443
+#  sentryDsn: https://sentry.io/foo/bar
+#  initJobConfig:
+#    deadlineSeconds: 600
+#    ttlSeconds: 600
+#    backoffLimit: 3
+#  migrationJobConfig:
+#    deadlineSeconds: 600
+#    ttlSeconds: 600
+#    backoffLimit: 3
+#  backupJobConfig:
+#    deadlineSeconds: 600
+#    ttlSeconds: 600
+#    backoffLimit: 3
+#  leaderElection: {}
+#  cacheNamespace: ""
+#  gracefulShutDown: ""

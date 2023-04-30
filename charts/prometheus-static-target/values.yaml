@@ -1,0 +1,31 @@
+image: ghcr.io/szeber/kube-stager-prometheus-static-target
+imageTag: v0.1.0
+service:
+  labels: {}
+  annotations: {}
+deployment:
+  labels: {}
+  annotations: {}
+  replicas: 1
+  podLabels: {}
+  podAnnotations: {}
+  resources:
+    limits:
+      memory: 128Mi
+    requests:
+      cpu: 10m
+      memory: 64Mi
+  rbacProxy:
+    resources:
+      limits:
+        cpu: 500m
+        memory: 128Mi
+      requests:
+        cpu: 5m
+        memory: 64Mi
+rbac:
+  create: true
+  serviceAccount:
+    name: kube-stager-prometheus-static-target-controller
+    labels: {}
+    annotations: {}
