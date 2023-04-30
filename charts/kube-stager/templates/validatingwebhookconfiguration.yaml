@@ -1,0 +1,115 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  annotations:
+    cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/{{ .Release.Name }}-serving-cert
+  labels:
+    app.kubernetes.io/component: webhook
+    app.kubernetes.io/created-by: kube-stager-test
+    app.kubernetes.io/instance: validating-webhook-configuration
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: validatingwebhookconfiguration
+    app.kubernetes.io/part-of: kube-stager-test
+  name: kube-stager-validating-webhook-configuration
+webhooks:
+- admissionReviewVersions:
+  - v1
+  - v1beta1
+  clientConfig:
+    service:
+      name: {{ .Release.Name }}-webhook-service
+      namespace: {{ .Release.Namespace }}
+      path: /validate-config-operator-kube-stager-io-v1-serviceconfig
+  failurePolicy: Fail
+  name: serviceconfig-handler.operator.kube-stager.io
+  rules:
+  - apiGroups:
+    - config.operator.kube-stager.io
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - serviceconfigs
+  sideEffects: None
+- admissionReviewVersions:
+  - v1
+  - v1beta1
+  clientConfig:
+    service:
+      name: {{ .Release.Name }}-webhook-service
+      namespace: {{ .Release.Namespace }}
+      path: /validate-config-operator-kube-stager-io-v1-serviceconfig-deletion
+  failurePolicy: Fail
+  name: serviceconfig-delete-handler.operator.kube-stager.io
+  rules:
+  - apiGroups:
+    - config.operator.kube-stager.io
+    apiVersions:
+    - v1
+    operations:
+    - DELETE
+    resources:
+    - serviceconfigs
+  sideEffects: None
+- admissionReviewVersions:
+  - v1
+  - v1beta1
+  clientConfig:
+    service:
+      name: {{ .Release.Name }}-webhook-service
+      namespace: {{ .Release.Namespace }}
+      path: /validate-config-operator-kube-stager-io-v1-mongoconfig-deletion
+  failurePolicy: Fail
+  name: mongoconfig-delete-handler.operator.kube-stager.io
+  rules:
+  - apiGroups:
+    - config.operator.kube-stager.io
+    apiVersions:
+    - v1
+    operations:
+    - DELETE
+    resources:
+    - mongoconfigs
+  sideEffects: None
+- admissionReviewVersions:
+  - v1
+  - v1beta1
+  clientConfig:
+    service:
+      name: {{ .Release.Name }}-webhook-service
+      namespace: {{ .Release.Namespace }}
+      path: /validate-config-operator-kube-stager-io-v1-mysqlconfig-deletion
+  failurePolicy: Fail
+  name: mysqlconfig-delete-handler.operator.kube-stager.io
+  rules:
+  - apiGroups:
+    - config.operator.kube-stager.io
+    apiVersions:
+    - v1
+    operations:
+    - DELETE
+    resources:
+    - mysqlconfigs
+  sideEffects: None
+- admissionReviewVersions:
+  - v1
+  - v1beta1
+  clientConfig:
+    service:
+      name: {{ .Release.Name }}-webhook-service
+      namespace: {{ .Release.Namespace }}
+      path: /validate-config-operator-kube-stager-io-v1-redisconfig-deletion
+  failurePolicy: Fail
+  name: redisconfig-delete-handler.operator.kube-stager.io
+  rules:
+  - apiGroups:
+    - config.operator.kube-stager.io
+    apiVersions:
+    - v1
+    operations:
+    - DELETE
+    resources:
+    - redisconfigs
+  sideEffects: None

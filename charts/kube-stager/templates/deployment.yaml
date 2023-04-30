@@ -1,0 +1,117 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    control-plane: controller-manager
+{{- range $key, $value := .Values.deployment.labels }}
+    {{ $key }}: {{ $value }}
+{{- end }}
+  annotations:
+{{ toYaml .Values.deployment.annotations | indent 4 }}
+  name: {{ .Release.Name }}-controller-manager
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  selector:
+    matchLabels:
+      control-plane: controller-manager
+{{- range $key, $value := .Values.deployment.podLabels }}
+      {{ $key }}: {{ $value }}
+{{- end }}
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: manager
+{{- range $key, $value := .Values.deployment.podAnnotations }}
+        {{ $key }}: {{ $value }}
+{{- end }}
+      labels:
+        control-plane: controller-manager
+{{- range $key, $value := .Values.deployment.podLabels }}
+        {{ $key }}: {{ $value }}
+{{- end }}
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                - amd64
+                - arm64
+              - key: kubernetes.io/os
+                operator: In
+                values:
+                - linux
+      containers:
+      - args:
+        - --config=/controller_manager_config.yaml
+        command:
+        - /manager
+        image: {{ .Values.image }}:{{ .Values.imageTag }}
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8081
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        name: manager
+        ports:
+        - containerPort: {{ .Values.config.webhook.port }}
+          name: webhook-server
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8081
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+{{ toYaml .Values.deployment.resources | indent 10 }}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - mountPath: /tmp/k8s-webhook-server/serving-certs
+          name: cert
+          readOnly: true
+        - mountPath: /controller_manager_config.yaml
+          name: manager-config
+          subPath: controller_manager_config.yaml
+      - args:
+        - --secure-listen-address=0.0.0.0:8443
+        - --upstream=http://127.0.0.1:8080/
+        - --logtostderr=true
+        - --v=0
+        image: gcr.io/kubebuilder/kube-rbac-proxy:v0.13.0
+        name: kube-rbac-proxy
+        ports:
+        - containerPort: 8443
+          name: https
+          protocol: TCP
+        resources:
+{{ toYaml .Values.deployment.rbacProxy.resources | indent 10 }}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      serviceAccountName: {{ .Values.rbac.serviceAccount.name }}
+      terminationGracePeriodSeconds: 10
+      volumes:
+      - name: cert
+        secret:
+          defaultMode: 420
+          secretName: webhook-server-cert
+      - configMap:
+          defaultMode: 420
+          name: {{ .Release.Name }}-manager-config
+        name: manager-config

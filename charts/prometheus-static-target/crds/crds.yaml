@@ -1,0 +1,144 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.11.1
+  creationTimestamp: null
+  name: additionalscrapeconfigs.prometheus-static-target.kube-stager.io
+spec:
+  group: prometheus-static-target.kube-stager.io
+  names:
+    kind: AdditionalScrapeConfig
+    listKind: AdditionalScrapeConfigList
+    plural: additionalscrapeconfigs
+    singular: additionalscrapeconfig
+  scope: Namespaced
+  versions:
+  - name: v1
+    schema:
+      openAPIV3Schema:
+        description: AdditionalScrapeConfig is the Schema for the additionalscrapeconfigs
+          API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AdditionalScrapeConfigSpec defines the desired state of AdditionalScrapeConfig
+            properties:
+              scrapeJobLabels:
+                additionalProperties:
+                  type: string
+                type: object
+              scrapeJobNamespaceSelector:
+                properties:
+                  any:
+                    description: Boolean describing whether all namespaces are selected
+                      in contrast to a list restricting them.
+                    type: boolean
+                  matchNames:
+                    description: List of namespace names to select from.
+                    items:
+                      type: string
+                    type: array
+                type: object
+              secretKey:
+                type: string
+              secretName:
+                type: string
+              secretNamespace:
+                type: string
+            required:
+            - secretKey
+            - secretName
+            - secretNamespace
+            type: object
+          status:
+            description: AdditionalScrapeConfigStatus defines the observed state of
+              AdditionalScrapeConfig
+            properties:
+              discoveredScrapeJobs:
+                items:
+                  type: string
+                type: array
+            required:
+            - discoveredScrapeJobs
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.11.1
+  creationTimestamp: null
+  name: scrapejobs.prometheus-static-target.kube-stager.io
+spec:
+  group: prometheus-static-target.kube-stager.io
+  names:
+    kind: ScrapeJob
+    listKind: ScrapeJobList
+    plural: scrapejobs
+    singular: scrapejob
+  scope: Namespaced
+  versions:
+  - name: v1
+    schema:
+      openAPIV3Schema:
+        description: ScrapeJob is the Schema for the scrapejobs API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ScrapeJobSpec defines the desired state of ScrapeJob
+            properties:
+              jobName:
+                type: string
+              staticConfigs:
+                items:
+                  properties:
+                    labels:
+                      additionalProperties:
+                        type: string
+                      type: object
+                    targets:
+                      items:
+                        type: string
+                      type: array
+                  required:
+                  - labels
+                  - targets
+                  type: object
+                type: array
+            required:
+            - jobName
+            - staticConfigs
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
