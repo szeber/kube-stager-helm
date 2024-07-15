@@ -1,5 +1,5 @@
 image: ghcr.io/szeber/kube-stager
-imageTag: v0.1.0
+imageTag: v0.3.0
 service:
   labels: {}
   annotations: {}
