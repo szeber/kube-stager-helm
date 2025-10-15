@@ -1,0 +1,15 @@
+{{- if .Values.deployment.podDisruptionBudget.enabled }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Release.Name }}-controller-manager
+  namespace: {{ .Release.Namespace }}
+spec:
+  minAvailable: {{ .Values.deployment.podDisruptionBudget.minAvailable }}
+  selector:
+    matchLabels:
+      control-plane: controller-manager
+{{- range $key, $value := .Values.deployment.podLabels }}
+      {{ $key }}: {{ $value }}
+{{- end }}
+{{- end }}

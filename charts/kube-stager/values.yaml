@@ -6,9 +6,12 @@ service:
 deployment:
   labels: {}
   annotations: {}
-  replicas: 1
+  replicas: 2
   podLabels: {}
   podAnnotations: {}
+  podDisruptionBudget:
+    enabled: true
+    minAvailable: 1
   resources:
     limits:
       cpu: 500m
@@ -37,6 +40,7 @@ config:
     bindAddress: 127.0.0.1:8080
   webhook:
     port: 9443
+  leaderElection: true
 #  sentryDsn: https://sentry.io/foo/bar
 #  initJobConfig:
 #    deadlineSeconds: 600
@@ -50,6 +54,10 @@ config:
 #    deadlineSeconds: 600
 #    ttlSeconds: 600
 #    backoffLimit: 3
-#  leaderElection: {}
 #  cacheNamespace: ""
 #  gracefulShutDown: ""
+monitoring:
+  enabled: false
+  serviceMonitor:
+    interval: 30s
+    scrapeTimeout: 10s

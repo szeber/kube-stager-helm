@@ -45,6 +45,17 @@ spec:
                 operator: In
                 values:
                 - linux
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  control-plane: controller-manager
+{{- range $key, $value := .Values.deployment.podLabels }}
+                  {{ $key }}: {{ $value }}
+{{- end }}
+              topologyKey: kubernetes.io/hostname
       containers:
       - args:
         - --config=/controller_manager_config.yaml
