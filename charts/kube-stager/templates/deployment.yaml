@@ -1,3 +1,6 @@
+{{- if and (gt (int .Values.deployment.replicas) 1) (not .Values.config.leaderElection) }}
+{{- fail "Leader election must be enabled when replicas > 1 to prevent split-brain scenarios. Set config.leaderElection=true or reduce replicas to 1." }}
+{{- end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -6,8 +9,10 @@ metadata:
 {{- range $key, $value := .Values.deployment.labels }}
     {{ $key }}: {{ $value }}
 {{- end }}
+{{- if .Values.deployment.annotations }}
   annotations:
 {{ toYaml .Values.deployment.annotations | indent 4 }}
+{{- end }}
   name: {{ .Release.Name }}-controller-manager
   namespace: {{ .Release.Namespace }}
 spec:
@@ -45,6 +50,7 @@ spec:
                 operator: In
                 values:
                 - linux
+{{- if gt (int .Values.deployment.replicas) 1 }}
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
           - weight: 100
@@ -56,6 +62,7 @@ spec:
                   {{ $key }}: {{ $value }}
 {{- end }}
               topologyKey: kubernetes.io/hostname
+{{- end }}
       containers:
       - args:
         - --config=/controller_manager_config.yaml

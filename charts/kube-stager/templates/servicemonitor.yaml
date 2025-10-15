@@ -15,7 +15,7 @@ spec:
     scrapeTimeout: {{ .Values.monitoring.serviceMonitor.scrapeTimeout }}
     bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
     tlsConfig:
-      insecureSkipVerify: true
+      insecureSkipVerify: {{ .Values.monitoring.serviceMonitor.insecureSkipVerify }}
   selector:
     matchLabels:
       control-plane: controller-manager
