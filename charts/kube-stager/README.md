@@ -16,19 +16,13 @@ helm install kube-stager ./charts/kube-stager -n kube-stager-system --create-nam
 
 ## Upgrading from v0.3.0
 
-Version 1.0.0 introduces several breaking changes:
+Version 1.0.0 introduces a breaking change:
 
-1. **Default replicas changed from 1 to 2** - For single-node clusters or development, set `deployment.replicas: 1`
-2. **Leader election enabled by default** - Required for HA setups with multiple replicas
-3. **PodDisruptionBudget enabled** - Prevents disruption during updates
+- **Leader election enabled by default** - This is safe for both single and multi-replica deployments
 
-To maintain v0.3.0 behavior:
+To maintain v0.3.0 behavior (leader election disabled):
 
 ```yaml
-deployment:
-  replicas: 1
-  podDisruptionBudget:
-    enabled: false
 config:
   leaderElection: false
 ```
@@ -37,7 +31,7 @@ config:
 
 ### High Availability (HA)
 
-The chart defaults to HA configuration as of v1.0.0:
+For production deployments, enable HA configuration:
 
 ```yaml
 deployment:
@@ -47,10 +41,10 @@ deployment:
     minAvailable: 1  # Always keep at least 1 replica running
 
 config:
-  leaderElection: true  # Enable leader election (required for multiple replicas)
+  leaderElection: true  # Enabled by default (safe for both single and multi-replica)
 ```
 
-Pod anti-affinity is automatically configured to spread replicas across nodes.
+Pod anti-affinity is automatically configured when replicas > 1 to spread pods across nodes.
 
 ### Monitoring
 
@@ -144,8 +138,8 @@ spec:
 |-----|------|---------|-------------|
 | `image` | string | `"ghcr.io/szeber/kube-stager"` | Operator image |
 | `imageTag` | string | `"v1.0.0"` | Image tag |
-| `deployment.replicas` | int | `2` | Number of replicas |
-| `deployment.podDisruptionBudget.enabled` | bool | `true` | Enable PodDisruptionBudget |
+| `deployment.replicas` | int | `1` | Number of replicas |
+| `deployment.podDisruptionBudget.enabled` | bool | `false` | Enable PodDisruptionBudget |
 | `deployment.podDisruptionBudget.minAvailable` | int | `1` | Minimum available pods |
 | `config.leaderElection` | bool | `true` | Enable leader election |
 | `monitoring.enabled` | bool | `false` | Enable ServiceMonitor |
