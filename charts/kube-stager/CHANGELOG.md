@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Conditional annotation rendering to avoid empty YAML blocks
 - Configurable ServiceMonitor TLS verification
 - Added multi-replica validation for leader election requirement
+- Config file format to match kube-stager v1.0.0 ProjectConfig (removed apiVersion/kind, added job configs)
 
 ## [0.3.0] and earlier
 See git history for changes in previous releases.

@@ -40,21 +40,20 @@ config:
   webhook:
     port: 9443
   leaderElection: true
+  initJobConfig:
+    deadlineSeconds: 600
+    ttlSeconds: 600
+    backoffLimit: 0
+  migrationJobConfig:
+    deadlineSeconds: 600
+    ttlSeconds: 600
+    backoffLimit: 3
+  backupJobConfig:
+    deadlineSeconds: 600
+    ttlSeconds: 600
+    backoffLimit: 3
 #  sentryDsn: https://sentry.io/foo/bar
-#  initJobConfig:
-#    deadlineSeconds: 600
-#    ttlSeconds: 600
-#    backoffLimit: 3
-#  migrationJobConfig:
-#    deadlineSeconds: 600
-#    ttlSeconds: 600
-#    backoffLimit: 3
-#  backupJobConfig:
-#    deadlineSeconds: 600
-#    ttlSeconds: 600
-#    backoffLimit: 3
 #  cacheNamespace: ""
-#  gracefulShutDown: ""
 monitoring:
   enabled: false
   serviceMonitor:
