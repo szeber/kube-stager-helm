@@ -196,8 +196,8 @@ Default resource limits:
 deployment:
   resources:
     limits:
-      cpu: 500m
-      memory: 128Mi
+      memory: 256Mi
+      # CPU limits removed following Kubernetes best practices to prevent throttling
     requests:
       cpu: 10m
       memory: 64Mi
@@ -211,6 +211,8 @@ deployment:
         cpu: 5m
         memory: 64Mi
 ```
+
+**Note**: CPU limits are removed from the manager container following Kubernetes community best practices. CPU throttling can cause cascading failures in operators (missed reconciliations, webhook timeouts). The operator can now burst to handle reconciliation spikes without artificial constraints.
 
 ### Redis TLS Configuration
 
