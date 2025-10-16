@@ -29,6 +29,18 @@ Version 1.0.0 introduces breaking changes:
   - These fields have sensible defaults and can be customized via values.yaml
   - The config file no longer uses Kubernetes CR format (apiVersion/kind removed from file-based config)
 
+- **Redis TLS and authentication now enforced** - The Redis handler now properly uses TLS and authentication settings
+  - TLS certificate verification is enabled by default
+  - **Action required**: If using Redis with self-signed certificates, update your RedisConfig:
+    ```yaml
+    apiVersion: config.operator.kube-stager.io/v1
+    kind: RedisConfig
+    spec:
+      isTlsEnabled: true
+      verifyTlsServerCertificate: false  # For self-signed certificates
+    ```
+  - Previously these settings were ignored and Redis connections were made without TLS/auth
+
 ### Upgrade Steps
 
 **IMPORTANT:** Helm does not automatically update CRDs. You must update them manually first.
