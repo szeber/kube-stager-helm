@@ -1,0 +1,19 @@
+{{- if .Values.deployment.podDisruptionBudget.enabled }}
+{{- if lt (int .Values.deployment.podDisruptionBudget.minAvailable) (int .Values.deployment.replicas) }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Release.Name }}-controller-manager
+  namespace: {{ .Release.Namespace }}
+spec:
+  minAvailable: {{ .Values.deployment.podDisruptionBudget.minAvailable }}
+  selector:
+    matchLabels:
+      control-plane: controller-manager
+{{- range $key, $value := .Values.deployment.podLabels }}
+      {{ $key }}: {{ $value }}
+{{- end }}
+{{- else }}
+{{- fail "deployment.podDisruptionBudget.minAvailable must be less than deployment.replicas to allow updates" }}
+{{- end }}
+{{- end }}

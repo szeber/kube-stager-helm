@@ -1,5 +1,5 @@
 image: ghcr.io/szeber/kube-stager
-imageTag: v0.3.0
+imageTag: v1.0.0-rc1
 service:
   labels: {}
   annotations: {}
@@ -9,10 +9,12 @@ deployment:
   replicas: 1
   podLabels: {}
   podAnnotations: {}
+  podDisruptionBudget:
+    enabled: false
+    minAvailable: 1
   resources:
     limits:
-      cpu: 500m
-      memory: 128Mi
+      memory: 256Mi
     requests:
       cpu: 10m
       memory: 64Mi
@@ -37,6 +39,7 @@ config:
     bindAddress: 127.0.0.1:8080
   webhook:
     port: 9443
+  leaderElection: true
 #  sentryDsn: https://sentry.io/foo/bar
 #  initJobConfig:
 #    deadlineSeconds: 600
@@ -50,6 +53,11 @@ config:
 #    deadlineSeconds: 600
 #    ttlSeconds: 600
 #    backoffLimit: 3
-#  leaderElection: {}
 #  cacheNamespace: ""
 #  gracefulShutDown: ""
+monitoring:
+  enabled: false
+  serviceMonitor:
+    interval: 30s
+    scrapeTimeout: 10s
+    insecureSkipVerify: false

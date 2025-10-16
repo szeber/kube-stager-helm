@@ -1,0 +1,22 @@
+{{- if .Values.monitoring.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .Release.Name }}-controller-manager-metrics
+  namespace: {{ .Release.Namespace }}
+  labels:
+    control-plane: controller-manager
+spec:
+  endpoints:
+  - path: /metrics
+    port: https
+    scheme: https
+    interval: {{ .Values.monitoring.serviceMonitor.interval }}
+    scrapeTimeout: {{ .Values.monitoring.serviceMonitor.scrapeTimeout }}
+    bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+    tlsConfig:
+      insecureSkipVerify: {{ .Values.monitoring.serviceMonitor.insecureSkipVerify }}
+  selector:
+    matchLabels:
+      control-plane: controller-manager
+{{- end }}
