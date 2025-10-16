@@ -16,13 +16,18 @@ helm install kube-stager ./charts/kube-stager -n kube-stager-system --create-nam
 
 ## Upgrading from v0.3.0
 
-Version 1.0.0 introduces a breaking change:
+Version 1.0.0 introduces breaking changes:
 
 - **Leader election enabled by default** - This is safe for both single and multi-replica deployments
   - **Required permissions**: The operator needs access to ConfigMaps and Leases in the deployment namespace
   - **Impact on single replica**: No functional change, minimal performance overhead (~5-10MB memory)
   - **Impact on multi-replica**: Enables proper leader election, prevents split-brain scenarios
   - The leader election mechanism ensures only one replica actively reconciles resources
+
+- **Configuration format changed** - Replaced controller-runtime's v1alpha1 config with custom ProjectConfig
+  - Job configuration (initJobConfig, migrationJobConfig, backupJobConfig) is now explicitly included in the config
+  - These fields have sensible defaults and can be customized via values.yaml
+  - The config file no longer uses Kubernetes CR format (apiVersion/kind removed from file-based config)
 
 ### Upgrade Steps
 
