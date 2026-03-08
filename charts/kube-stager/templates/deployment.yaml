@@ -80,6 +80,9 @@ spec:
         - containerPort: {{ .Values.config.webhook.port }}
           name: webhook-server
           protocol: TCP
+        - containerPort: 8080
+          name: http-metrics
+          protocol: TCP
         readinessProbe:
           httpGet:
             path: /readyz
@@ -100,24 +103,6 @@ spec:
         - mountPath: /controller_manager_config.yaml
           name: manager-config
           subPath: controller_manager_config.yaml
-      - args:
-        - --secure-listen-address=0.0.0.0:8443
-        - --upstream=http://127.0.0.1:8080/
-        - --logtostderr=true
-        - --v=0
-        image: gcr.io/kubebuilder/kube-rbac-proxy:v0.13.0
-        name: kube-rbac-proxy
-        ports:
-        - containerPort: 8443
-          name: https
-          protocol: TCP
-        resources:
-{{ toYaml .Values.deployment.rbacProxy.resources | indent 10 }}
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
       securityContext:
         runAsNonRoot: true
         seccompProfile:

@@ -180,7 +180,7 @@ config:
   health:
     healthProbeBindAddress: :8081
   metrics:
-    bindAddress: 127.0.0.1:8080
+    bindAddress: :8080
   webhook:
     port: 9443
   leaderElection: true
@@ -218,15 +218,6 @@ deployment:
     requests:
       cpu: 10m
       memory: 64Mi
-
-  rbacProxy:
-    resources:
-      limits:
-        cpu: 500m
-        memory: 128Mi
-      requests:
-        cpu: 5m
-        memory: 64Mi
 ```
 
 **Note**: CPU limits are removed from the manager container following Kubernetes community best practices. CPU throttling can cause cascading failures in operators (missed reconciliations, webhook timeouts). The operator can now burst to handle reconciliation spikes without artificial constraints.
