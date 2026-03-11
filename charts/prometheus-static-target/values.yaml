@@ -1,5 +1,5 @@
 image: ghcr.io/szeber/kube-stager-prometheus-static-target
-imageTag: v1.0.0-rc2
+imageTag: v1.0.0-rc3
 service:
   labels: {}
   annotations: {}
