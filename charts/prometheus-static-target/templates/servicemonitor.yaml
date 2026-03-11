@@ -1,0 +1,26 @@
+{{- if .Values.monitoring.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .Release.Name }}-controller-manager-metrics
+  namespace: {{ .Release.Namespace }}
+  labels:
+    control-plane: controller-manager
+{{- if .Values.monitoring.serviceMonitor.labels }}
+{{ toYaml .Values.monitoring.serviceMonitor.labels | indent 4 }}
+{{- end }}
+{{- if .Values.monitoring.serviceMonitor.annotations }}
+  annotations:
+{{ toYaml .Values.monitoring.serviceMonitor.annotations | indent 4 }}
+{{- end }}
+spec:
+  endpoints:
+  - path: /metrics
+    port: http-metrics
+    scheme: http
+    interval: {{ .Values.monitoring.serviceMonitor.interval }}
+    scrapeTimeout: {{ .Values.monitoring.serviceMonitor.scrapeTimeout }}
+  selector:
+    matchLabels:
+      control-plane: controller-manager
+{{- end }}

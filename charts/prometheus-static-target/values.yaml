@@ -21,3 +21,10 @@ rbac:
     name: kube-stager-prometheus-static-target-controller
     labels: {}
     annotations: {}
+monitoring:
+  enabled: false
+  serviceMonitor:
+    interval: 30s
+    scrapeTimeout: 10s
+    labels: {}
+    annotations: {}
