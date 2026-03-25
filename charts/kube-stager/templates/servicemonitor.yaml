@@ -9,6 +9,10 @@ metadata:
 {{- if .Values.monitoring.serviceMonitor.labels }}
 {{ toYaml .Values.monitoring.serviceMonitor.labels | indent 4 }}
 {{- end }}
+{{- if .Values.monitoring.serviceMonitor.annotations }}
+  annotations:
+{{ toYaml .Values.monitoring.serviceMonitor.annotations | indent 4 }}
+{{- end }}
 spec:
   endpoints:
   - path: /metrics

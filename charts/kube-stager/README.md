@@ -150,6 +150,46 @@ spec:
         summary: "High error rate in kube-stager reconciliation"
         description: "Error rate is {{ $value | humanizePercentage }} over the last 5 minutes"
 
+    # Alert on permanent (final) errors requiring human intervention
+    - alert: KubeStagerFinalErrors
+      expr: rate(kube_stager_errors_total{final="true"}[5m]) > 0
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: "kube-stager has permanent errors"
+        description: "Controller {{ $labels.controller }} has {{ $value | humanize }} final errors/s that require manual intervention"
+
+    # Alert on sites stuck in Pending state
+    - alert: KubeStagerSitesStuckPending
+      expr: kube_stager_staging_sites{state="Pending"} > 0
+      for: 30m
+      labels:
+        severity: warning
+      annotations:
+        summary: "StagingSites stuck in Pending state"
+        description: "{{ $value }} sites in namespace {{ $labels.namespace }} have been Pending for over 30 minutes"
+
+    # Alert on high job failure rate
+    - alert: KubeStagerJobFailures
+      expr: rate(kube_stager_job_completions_total{result="failure"}[10m]) > 0.1
+      for: 10m
+      labels:
+        severity: warning
+      annotations:
+        summary: "High job failure rate in kube-stager"
+        description: "{{ $labels.kind }} jobs are failing at {{ $value | humanize }}/s"
+
+    # Alert on database operation latency
+    - alert: KubeStagerDatabaseLatency
+      expr: histogram_quantile(0.99, rate(kube_stager_database_operation_duration_seconds_bucket[5m])) > 10
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "High database operation latency"
+        description: "p99 {{ $labels.type }} {{ $labels.operation }} latency is {{ $value | humanizeDuration }}"
+
     # Alert on webhook failures
     - alert: KubeStagerWebhookFailures
       expr: rate(controller_runtime_webhook_requests_total{code!~"2.."}[5m]) > 0.05
