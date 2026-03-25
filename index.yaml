@@ -2,6 +2,20 @@ apiVersion: v1
 entries:
   kube-stager:
   - apiVersion: v1
+    appVersion: 1.0.3-rc1
+    created: "2026-03-25T23:52:25.530254347Z"
+    description: Kubernetes staging/test site operator
+    digest: 89eb0e3c15d58df1b9bafc10c972c091d4e443e296570072ae02faa609d3d0b6
+    home: https://github.com/szeber/kube-stager
+    maintainers:
+    - name: Zsolt Szeberenyi
+    name: kube-stager
+    sources:
+    - https://github.com/szeber/kube-stager
+    urls:
+    - https://github.com/szeber/kube-stager-helm/releases/download/kube-stager-2.1.0-rc1/kube-stager-2.1.0-rc1.tgz
+    version: 2.1.0-rc1
+  - apiVersion: v1
     appVersion: 1.0.2
     created: "2026-03-08T22:50:29.508045573Z"
     description: Kubernetes staging/test site operator
@@ -251,4 +265,4 @@ entries:
     urls:
     - https://github.com/szeber/kube-stager-helm/releases/download/prometheus-static-target-0.1.0/prometheus-static-target-0.1.0.tgz
     version: 0.1.0
-generated: "2026-03-11T23:36:56.158636316Z"
+generated: "2026-03-25T23:52:25.530296286Z"
