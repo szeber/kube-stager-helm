@@ -1,0 +1,30 @@
+{{- if and .Values.monitoring.enabled .Values.monitoring.grafanaDashboard.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-grafana-dashboard
+  namespace: {{ .Release.Namespace }}
+  labels:
+    grafana_dashboard: "1"
+{{- if .Values.monitoring.grafanaDashboard.labels }}
+{{ toYaml .Values.monitoring.grafanaDashboard.labels | indent 4 }}
+{{- end }}
+{{- if or .Values.monitoring.grafanaDashboard.folder .Values.monitoring.grafanaDashboard.annotations }}
+  annotations:
+{{- if .Values.monitoring.grafanaDashboard.folder }}
+    grafana_folder: {{ .Values.monitoring.grafanaDashboard.folder | quote }}
+{{- end }}
+{{- if .Values.monitoring.grafanaDashboard.annotations }}
+{{ toYaml .Values.monitoring.grafanaDashboard.annotations | indent 4 }}
+{{- end }}
+{{- end }}
+data:
+  kube-stager.json: |
+{{- $dashboard := .Files.Get "dashboards/kube-stager.json" }}
+{{- if .Values.monitoring.grafanaDashboard.datasource }}
+{{- $dashboard = $dashboard | replace "__DATASOURCE_UID__" .Values.monitoring.grafanaDashboard.datasource }}
+{{- else }}
+{{- $dashboard = $dashboard | replace "{ \"selected\": true, \"text\": \"__DATASOURCE_UID__\", \"value\": \"__DATASOURCE_UID__\" }" "{}" }}
+{{- end }}
+{{ $dashboard | indent 4 }}
+{{- end }}
