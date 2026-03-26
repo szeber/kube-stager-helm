@@ -28,3 +28,9 @@ monitoring:
     scrapeTimeout: 10s
     labels: {}
     annotations: {}
+  grafanaDashboard:
+    enabled: false
+    labels: {}
+    annotations: {}
+    folder: ""
+    datasource: ""
