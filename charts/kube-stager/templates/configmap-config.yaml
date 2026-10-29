@@ -5,4 +5,8 @@ metadata:
   namespace: {{ .Release.Namespace }}
 data:
   controller_manager_config.yaml: |-
-{{ toYaml .Values.config | indent 4 }}
+{{- $config := deepCopy .Values.config }}
+{{- if (dig "rbacProxy" "enabled" false .Values.deployment) }}
+{{- $_ := set $config "metrics" (merge (dict "bindAddress" (include "kube-stager.proxiedMetricsAddress" .)) (default dict $config.metrics)) }}
+{{- end }}
+{{ toYaml $config | indent 4 }}

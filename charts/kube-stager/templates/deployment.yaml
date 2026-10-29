@@ -80,9 +80,11 @@ spec:
         - containerPort: {{ .Values.config.webhook.port }}
           name: webhook-server
           protocol: TCP
+{{- if not (dig "rbacProxy" "enabled" false .Values.deployment) }}
         - containerPort: 8080
           name: http-metrics
           protocol: TCP
+{{- end }}
         readinessProbe:
           httpGet:
             path: /readyz
@@ -103,6 +105,30 @@ spec:
         - mountPath: /controller_manager_config.yaml
           name: manager-config
           subPath: controller_manager_config.yaml
+{{- if (dig "rbacProxy" "enabled" false .Values.deployment) }}
+      - args:
+        - --secure-listen-address=0.0.0.0:8443
+        - --tls-cert-file=/etc/metrics-certs/tls.crt
+        - --tls-private-key-file=/etc/metrics-certs/tls.key
+        - --upstream=http://{{ include "kube-stager.proxiedMetricsAddress" . }}/
+        image: {{ .Values.deployment.rbacProxy.image }}:{{ .Values.deployment.rbacProxy.imageTag }}
+        name: kube-rbac-proxy
+        ports:
+        - containerPort: 8443
+          name: https-metrics
+          protocol: TCP
+        resources:
+{{ toYaml .Values.deployment.rbacProxy.resources | indent 10 }}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - mountPath: /etc/metrics-certs
+          name: metrics-cert
+          readOnly: true
+{{- end }}
       securityContext:
         runAsNonRoot: true
         seccompProfile:
@@ -118,3 +144,9 @@ spec:
           defaultMode: 420
           name: {{ .Release.Name }}-manager-config
         name: manager-config
+{{- if (dig "rbacProxy" "enabled" false .Values.deployment) }}
+      - name: metrics-cert
+        secret:
+          defaultMode: 420
+          secretName: {{ .Release.Name }}-metrics-server-cert
+{{- end }}

@@ -16,8 +16,20 @@ metadata:
 spec:
   endpoints:
   - path: /metrics
+{{- if (dig "rbacProxy" "enabled" false .Values.deployment) }}
+    port: https-metrics
+    scheme: https
+    bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+    tlsConfig:
+      serverName: {{ .Release.Name }}-controller-manager-metrics-service.{{ .Release.Namespace }}.svc
+      ca:
+        secret:
+          name: {{ .Release.Name }}-metrics-server-cert
+          key: ca.crt
+{{- else }}
     port: http-metrics
     scheme: http
+{{- end }}
     interval: {{ .Values.monitoring.serviceMonitor.interval }}
     scrapeTimeout: {{ .Values.monitoring.serviceMonitor.scrapeTimeout }}
   selector:

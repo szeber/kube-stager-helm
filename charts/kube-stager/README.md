@@ -115,6 +115,27 @@ monitoring:
 
 **Note:** ServiceMonitor requires Prometheus Operator to be installed in your cluster.
 
+#### Securing metrics with kube-rbac-proxy
+
+Metrics are served over plain HTTP on port 8080 by default. To require authentication and authorisation, enable the
+kube-rbac-proxy sidecar:
+
+```yaml
+deployment:
+  rbacProxy:
+    enabled: true
+```
+
+The manager then binds metrics to `127.0.0.1:8080`, replacing `config.metrics.bindAddress`, and the proxy serves them
+over HTTPS on port 8443 (`https-metrics`).
+
+- The ServiceMonitor scrapes with Prometheus's service account token, so that service account must be bound to the
+  `<release>-metrics-reader` ClusterRole.
+- With `rbac.create: true` the chart creates that ClusterRole and the proxy's TokenReview/SubjectAccessReview
+  ClusterRole and binding. With `rbac.create: false` you must create all three yourself.
+- The ServiceMonitor uses `bearerTokenFile`. A Prometheus with `arbitraryFSAccessThroughSMs.deny: true` rejects it.
+- To enable the proxy on an existing release, upgrade with `--reset-then-reuse-values`, not `--reuse-values`.
+
 #### PrometheusRule Examples
 
 The chart does not install alerting rules automatically. Here are recommended alerts you can create manually:
@@ -281,10 +302,13 @@ spec:
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | `image` | string | `"ghcr.io/szeber/kube-stager"` | Operator image |
-| `imageTag` | string | `"v1.0.0"` | Image tag |
+| `imageTag` | string | `"v1.0.3"` | Image tag |
 | `deployment.replicas` | int | `1` | Number of replicas |
 | `deployment.podDisruptionBudget.enabled` | bool | `false` | Enable PodDisruptionBudget |
 | `deployment.podDisruptionBudget.minAvailable` | int | `1` | Minimum available pods |
+| `deployment.rbacProxy.enabled` | bool | `false` | Serve metrics through a kube-rbac-proxy sidecar |
+| `deployment.rbacProxy.image` | string | `"quay.io/brancz/kube-rbac-proxy"` | kube-rbac-proxy image |
+| `deployment.rbacProxy.imageTag` | string | `"v0.23.1"` | kube-rbac-proxy image tag |
 | `config.leaderElection` | bool | `true` | Enable leader election |
 | `monitoring.enabled` | bool | `false` | Enable ServiceMonitor |
 

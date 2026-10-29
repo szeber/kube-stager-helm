@@ -14,9 +14,16 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   ports:
+{{- if (dig "rbacProxy" "enabled" false .Values.deployment) }}
+  - name: https-metrics
+    port: 8443
+    protocol: TCP
+    targetPort: 8443
+{{- else }}
   - name: http-metrics
     port: 8080
     protocol: TCP
     targetPort: 8080
+{{- end }}
   selector:
     control-plane: controller-manager

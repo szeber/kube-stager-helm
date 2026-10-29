@@ -5,6 +5,19 @@ All notable changes to the kube-stager Helm chart will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2026-10-29
+
+### Added
+- Optional kube-rbac-proxy sidecar for authenticated metrics (`deployment.rbacProxy`, disabled by default, image
+  `quay.io/brancz/kube-rbac-proxy:v0.23.1`)
+
+### Changed
+- Updated appVersion to 1.0.3
+- Updated imageTag to v1.0.3
+- Updated CRDs (controller-gen v0.23.0): the ServiceConfig pod template follows Kubernetes 1.36, the alpha
+  `workloadRef` field is removed and `schedulingGroup` is added. Helm does not upgrade CRDs: apply
+  `crds/crds.yaml` before upgrading, as described in the README
+
 ## [2.1.0-rc1] - 2026-03-26
 
 ### Added

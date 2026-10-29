@@ -1,5 +1,5 @@
 image: ghcr.io/szeber/kube-stager-prometheus-static-target
-imageTag: v1.0.0-rc3
+imageTag: v1.0.0
 service:
   labels: {}
   annotations: {}
@@ -15,6 +15,16 @@ deployment:
     requests:
       cpu: 10m
       memory: 64Mi
+  rbacProxy:
+    enabled: false
+    image: quay.io/brancz/kube-rbac-proxy
+    imageTag: v0.23.1
+    resources:
+      limits:
+        memory: 64Mi
+      requests:
+        cpu: 5m
+        memory: 32Mi
 rbac:
   create: true
   serviceAccount:
