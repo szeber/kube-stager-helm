@@ -2,6 +2,20 @@ apiVersion: v1
 entries:
   kube-stager:
   - apiVersion: v1
+    appVersion: 1.0.3
+    created: "2026-10-29T00:25:08.438108488Z"
+    description: Kubernetes staging/test site operator
+    digest: bf879f65e63b7cda9f50f28c78100eddfe5c7a65c06d898d0820e8982301755c
+    home: https://github.com/szeber/kube-stager
+    maintainers:
+    - name: Zsolt Szeberenyi
+    name: kube-stager
+    sources:
+    - https://github.com/szeber/kube-stager
+    urls:
+    - https://github.com/szeber/kube-stager-helm/releases/download/kube-stager-2.1.0/kube-stager-2.1.0.tgz
+    version: 2.1.0
+  - apiVersion: v1
     appVersion: 1.0.3-rc1
     created: "2026-03-26T21:42:56.677631543Z"
     description: Kubernetes staging/test site operator
@@ -173,6 +187,21 @@ entries:
     version: 0.1.0
   prometheus-static-target:
   - apiVersion: v1
+    appVersion: 1.0.0
+    created: "2026-10-29T00:25:08.57616328Z"
+    description: Prometheus static target operator to extend the functionality of
+      Prometheus Operator
+    digest: 79efd42c09d5c74704fc47013f480d13d86017648af763da3042986461edb275
+    home: https://github.com/szeber/kube-stager-prometheus-static-target
+    maintainers:
+    - name: Zsolt Szeberenyi
+    name: prometheus-static-target
+    sources:
+    - https://github.com/szeber/kube-stager-prometheus-static-target
+    urls:
+    - https://github.com/szeber/kube-stager-helm/releases/download/prometheus-static-target-1.0.0/prometheus-static-target-1.0.0.tgz
+    version: 1.0.0
+  - apiVersion: v1
     appVersion: 1.0.0-rc3
     created: "2026-03-26T21:43:12.72216191Z"
     description: Prometheus static target operator to extend the functionality of
@@ -294,4 +323,4 @@ entries:
     urls:
     - https://github.com/szeber/kube-stager-helm/releases/download/prometheus-static-target-0.1.0/prometheus-static-target-0.1.0.tgz
     version: 0.1.0
-generated: "2026-03-26T21:43:12.722243162Z"
+generated: "2026-10-29T00:25:08.576371298Z"
