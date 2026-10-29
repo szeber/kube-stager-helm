@@ -1,0 +1,9 @@
+{{- if (dig "rbacProxy" "enabled" false .Values.deployment) }}
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ .Release.Name }}-selfsigned-issuer
+  namespace: {{ .Release.Namespace }}
+spec:
+  selfSigned: {}
+{{- end }}
